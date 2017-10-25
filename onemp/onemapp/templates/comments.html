@@ -1,0 +1,20 @@
+{% block content %}
+{% with comments.count as total_comments %}
+    <h2>
+        {{ total_comments }} комментариев
+    </h2>
+{% endwith %}
+
+{% for comment in comments %}
+<div class="comment">
+    <p class="info">
+        <b>Комментарий {{ forloop.counter }} от {{ comment.author }}</b><br/>
+        {{ comment.created_date }}
+        {{ comment.body|linebreaks}}
+        {{% emty %}}
+            <p>Нет комментариев</p>
+    </p>
+</div>
+{% endfor %}
+
+{% endblock %}

@@ -4,8 +4,14 @@
 <h1>Hi, team!</h1>
 
 {% for post in posts %}
-<div><p><b>{{post.author}}</b><br>{{post.text}}</p></div>
+<div>
+    <p>
+        <b>{{post.author}}</b><br/>
+        <a href="{{post.id}}">{{post.title}}</a>
+    </p>
+</div>
 {% endfor %}
 
 <p>{% lorem %}</p>
+
 {% endblock %}
