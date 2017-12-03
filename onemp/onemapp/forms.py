@@ -18,3 +18,12 @@ class CommentForm(forms.Form):
 class PostListForm(forms.Form):
     search = forms.CharField(required=False)
     sort_field = forms.ChoiceField(choices=(('id', 'ID'), ('title', 'title'), ('-created_date', u'Дата создания')), required=False)
+    
+    
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = [
+            "title",
+            "text"
+        ]

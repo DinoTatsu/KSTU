@@ -1,8 +1,17 @@
 ##from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect, resolve_url
 from django.http import HttpResponse
-from .models import Post
+from .models import Post, Comment
+from .forms import PostListForm, PostForm, CommentForm, BootstrapAuthenticationForm
 
+
+
+@login_required
+def user_post_list(request):
+    user = get_user(request)
+    return post_list(request, user)
+
+    
 def post_list(request):
     """ Список всех постов с возможностью сортировки и поиска по title, можно добавить пост"""
     if user and user.is_authenticated:
