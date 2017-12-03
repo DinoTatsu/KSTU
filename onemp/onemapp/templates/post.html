@@ -1,10 +1,60 @@
 {% extends "./base.html" %}
 
 {% block content %}
-<div>
-    <b>{{post.author}}</b><br/>
-    {{post.created_date}}<br/>
-    <h2>{{post.title}}</h2><br/>
-    <p>{{post.text}}</p><br/>
-</div>
+    <div class="post">
+        {{post.created_date}}<br/>
+        <h2>{{post.title}}</h2><br/>
+        <p>{{post.text}}</p><br/>
+    </div>
+{#    {% include 'comments.html' %}#}
+    <hr />
+    <div>
+        <div class="comments">
+            {% with comments.count as total_comments %}
+                <b> {{ total_comments }} комментариев </b>
+            {% endwith %}
+
+            {% for comment in comments %}
+                <p class="comment">
+                    <b> от {{ comment.author }}</b>
+                    {{ comment.created_date }} <br/>
+                    {{ comment.text}}
+                    {% empty %}
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div>
+
+
+        <div class="col-md-8">
+            <b>
+                Добавить комментарий
+            </b>
+        <form method="POST" action="" class="form-horizontal">
+        {% csrf_token %}
+            <div class="form-group">
+            <!-- <label for="comment_author">Автор: </label>
+            <input type="text" name="comment_author" size="50">
+            <br><br>
+            <textarea name="comment_text"></textarea> <br> -->
+            <div class="col-md-2 control-label">
+                {{ form.author.label_tag }}
+            </div>
+            <div class="col-md-10">
+                {{ form.author }}
+            </div>
+            <div class="col-md-2 control-label">
+                {{ form.text.label_tag }}
+            </div>
+            <div class="col-md-10">
+                {{ form.text }} <br>
+            </div>
+            <input type="submit" value="Добавить" class="btn btn-default" >
+        </div>
+
+        </form>
+        </div>
+    </div>
 {% endblock %}

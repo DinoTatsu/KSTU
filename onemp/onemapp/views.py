@@ -8,6 +8,14 @@ def post_list(request):
     return render(request, 'post_list.html', {'posts': posts})
 
 def post_detail(request, post_id):
+    """ Пост с комментариями, можно добавить комментарий"""
     post = get_object_or_404(Post, pk=post_id)
-    return render(request, 'post.html', {'post': post})
-    #return render(request, 'detail.html', {'post': post})
+    comments = Comment.objects.filter(post=post)
+    form = CommentForm(request.POST)
+    form.is_valid()
+    if form.cleaned_data.get('author') and form.cleaned_data.get('text'):
+        author = form.cleaned_data.get('author')
+        text = form.cleaned_data.get('text')[:125]
+        title = text[:25]
+        comment = Comment.objects.create(title=title, post=post, author=author, text=text)
+    return render(request, 'post.html', {'post': post, 'comments': comments, 'form': form})

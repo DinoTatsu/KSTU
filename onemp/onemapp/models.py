@@ -11,9 +11,12 @@ class Post(models.Model):
         return self.title
         
 class Comment(models.Model):
-    post = models.ForeignKey('Post')
-    author = models.ForeignKey('auth.User')
-    text = models.TextField()
+    title = models.CharField(max_length=25, default="")
+    author = models.CharField(max_length=20)
+    text = models.CharField(max_length=140)
     created_date = models.DateTimeField(default=timezone.now)
-    updated_date = models.DateTimeField(default=timezone.now)
+    post = models.ForeignKey(Post)
+
+    def __str__(self):
+        return self.title
     

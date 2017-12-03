@@ -1,10 +1,6 @@
 from .models import Comment
 
-class CommentForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = ('text')
-        
+
 class Comment(models.Model):
     post = models.ForeignKey('Post')
     author = models.ForignKey('auth.User')
@@ -12,3 +8,8 @@ class Comment(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     updated_date = models.DateTimeField(default=timezone.now)
     
+class CommentForm(forms.Form):
+    author = forms.CharField(widget=forms.TextInput({'size': 50}), max_length=20)
+    author.label = "Автор"
+    text = forms.CharField(widget=forms.Textarea({'maxlength': 125, 'cols': '52', 'rows': '3'}))
+    text.label = "Комментарий"
