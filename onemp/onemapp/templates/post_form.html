@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form method="POST" action="/create/">
+        {% csrf_token %}
+        {{ form.title.label_tag }}
+        {{ form.title }} <br>
+        {{ form.text.label_tag }}
+        {{ form.text }}  <br>
+        <input type="submit" value="Create Post" />
+    </form>
+
+{% endblock %}
