@@ -13,3 +13,8 @@ class CommentForm(forms.Form):
     author.label = "Автор"
     text = forms.CharField(widget=forms.Textarea({'maxlength': 125, 'cols': '52', 'rows': '3'}))
     text.label = "Комментарий"
+
+    
+class PostListForm(forms.Form):
+    search = forms.CharField(required=False)
+    sort_field = forms.ChoiceField(choices=(('id', 'ID'), ('title', 'title'), ('-created_date', u'Дата создания')), required=False)

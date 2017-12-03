@@ -4,8 +4,23 @@ from django.http import HttpResponse
 from .models import Post
 
 def post_list(request):
-    posts = Post.objects.all()
-    return render(request, 'post_list.html', {'posts': posts})
+    """ Список всех постов с возможностью сортировки и поиска по title, можно добавить пост"""
+    if user and user.is_authenticated:
+        posts = Post.objects.filter(author=user)  # получить посты пользователя
+    else:
+        posts = Post.objects.all()  # получить все посты
+
+    form = PostListForm(request.GET)  # создать форму на основе модели Post
+    form.is_valid()
+    if form.cleaned_data.get('search'):
+        posts = posts.filter(title__icontains=form.cleaned_data['search'])
+    if form.cleaned_data.get('sort_field'):
+        posts = posts.order_by(form.cleaned_data['sort_field'])
+
+    for post in posts:
+        post.text = post.text[:50]
+    return render(request, 'post_list.html', {'form': form, 'posts': posts})
+
 
 def post_detail(request, post_id):
     """ Пост с комментариями, можно добавить комментарий"""

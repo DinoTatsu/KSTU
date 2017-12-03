@@ -1,17 +1,58 @@
 {% extends "./base.html" %}
 
+{% block search %}
+    <form action="" class="form-inline">
+        <div class=" mr-sm-1">
+            {{ form.search }}
+        </div>
+        <button class="btn btn-outline-success my-sm-0" type="submit">Search</button>
+    </form>
+{% endblock %}
 {% block content %}
-<h1>Hi, team!</h1>
 
-{% for post in posts %}
-<div>
-    <p>
-        <b>{{post.author}}</b><br/>
-        <a href="{{post.id}}">{{post.title}}</a>
-    </p>
-</div>
-{% endfor %}
+    <h1>
+        Hi,
+        {% if request.user.is_authenticated %}
+            {{ user }}
+        {%  else %}
+            team!
+        {% endif %}
+    </h1>
+    <h3>
+        {% if request.user.is_authenticated %}
+            <form class="" action="/create/">
+                <input type="submit" value="Создать новый пост" class="btn btn-default" >
+            </form>
+        {% endif %}
+    </h3>
+        <div class="filtersearch">
+            <form action="">
+                <!-- <p>Сортировать </p>
+                <select name="sort_field">
+                    <option value="id">ID</option>
+                    <option value="created_date">Дата создания</option>
+                    <option value="title">Заголовок</option>
+                </select>
+                <br/><br> -->
+                {{ form.sort_field }}
+                <input type="submit"  value="Отсортировать" class="btn btn-default" >
+                {{ form.errors }}
+            </form>
+        </div>
 
-<p>{% lorem %}</p>
 
+    {% for post in posts %}
+        <div>
+            <p class="post">
+            <br>
+                <b>{{ post.title }}</b>
+                <br>
+                {{ post.text }}
+                <br>
+                <a href="{{ post.id }}"> Далее </a>
+            </p>
+        </div>
+    {% endfor %}
+
+    <p>{% lorem %}</p>
 {% endblock %}
