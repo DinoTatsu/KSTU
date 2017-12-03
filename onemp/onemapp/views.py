@@ -1,6 +1,7 @@
 ##from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect, resolve_url
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from .models import Post, Comment
 from .forms import PostListForm, PostForm, CommentForm, BootstrapAuthenticationForm
 
@@ -43,3 +44,17 @@ def post_detail(request, post_id):
         title = text[:25]
         comment = Comment.objects.create(title=title, post=post, author=author, text=text)
     return render(request, 'post.html', {'post': post, 'comments': comments, 'form': form})
+    
+
+@login_required
+def post_create(request):
+    """ Добавление поста"""
+    user = get_user(request)
+    form = PostForm(request.POST)
+    form.is_valid()
+    title = form.cleaned_data.get('title')
+    text = form.cleaned_data.get('text')
+    if title and text:
+        post = Post.objects.create(title=title, text=text, author=user)
+        return redirect(post_detail, post.pk)
+    return render(request, 'post_form.html', {'form': form})
