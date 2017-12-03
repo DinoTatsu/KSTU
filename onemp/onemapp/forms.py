@@ -1,5 +1,28 @@
-from .models import Comment
+from django import forms
+from .models import Post, Comment
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.utils.translation import ugettext_lazy as _
+from django.views.generic.edit import FormView
 
+
+class BootstrapAuthenticationForm(AuthenticationForm):
+    """Authentication form which uses boostrap CSS."""
+    username = forms.CharField(max_length=254,
+                               widget=forms.TextInput({'class': 'form-control', 'placeholder': 'User name'}))
+    password = forms.CharField(label=_("Password"),
+                               widget=forms.PasswordInput({'class': 'form-control', 'placeholder': 'Password'}))
+
+class RegisterForm(FormView):
+    form_class = UserCreationForm
+    success_url = "/login/"
+    template_name = "register.html"
+
+    def form_valid(self, form):
+        # Создаём пользователя, если данные в форму были введены корректно.
+        form.save()
+
+        # Вызываем метод базового класса
+        return super(RegisterForm, self).form_valid(form)
 
 class Comment(models.Model):
     post = models.ForeignKey('Post')

@@ -1,7 +1,8 @@
-##from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect, resolve_url
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user
+from django.contrib.auth.models import User
 from .models import Post, Comment
 from .forms import PostListForm, PostForm, CommentForm, BootstrapAuthenticationForm
 
