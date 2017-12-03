@@ -1,4 +1,5 @@
 *~
+__pycache__/
 *.pyc
 TMproj.v12.suo
 DesignTimeResolveAssemblyReferencesInput.cache
