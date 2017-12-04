@@ -3,10 +3,27 @@ main {
     padding-right: 60px;
 }
 footer {
-    position: absolute;
     text-align: right;
-    padding-right: 60px;
-    bottom:0;
-    width: 100%;
-    
+}
+.post {
+    padding: 1%;
+    margin: 0.5%;
+    background-color: #fbfbfb;
+}
+.filtersearch{
+    text-align: right;
+}
+.comments {
+    padding: 15px 22px;
+}
+
+.comment {
+    padding: 10px;
+    background-color: #f6f6f6;
+}
+
+.errorlist {}
+ul .errorlist {
+    margin: 1%;
+    color: slategray;
 }

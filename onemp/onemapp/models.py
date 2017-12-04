@@ -1,15 +1,18 @@
 from django.db import models
 from django.utils import timezone
 
+
 class Post(models.Model):
     author = models.ForeignKey('auth.User')
+    ## author = models.CharField(max_length=20, default="User")
     title = models.CharField(max_length=200)
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.title
-        
+
+
 class Comment(models.Model):
     title = models.CharField(max_length=25, default="")
     author = models.CharField(max_length=20)
@@ -19,4 +22,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.title
-    

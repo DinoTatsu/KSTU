@@ -16,33 +16,30 @@ class RegisterForm(FormView):
     form_class = UserCreationForm
     success_url = "/login/"
     template_name = "register.html"
+    # username = forms.CharField(max_length=254,
+    #                            widget=forms.TextInput({'class': 'form-control', 'placeholder': 'User name'}))
+    # password = forms.CharField(label=_("Password"),
+    #                            widget=forms.PasswordInput({'class': 'form-control', 'placeholder': 'Password'}))
+    # password2 = forms.CharField(label=_("Password"),
+    #                            widget=forms.PasswordInput({'class': 'form-control', 'placeholder': 'Password confirmation'}))
 
     def form_valid(self, form):
-        # Создаём пользователя, если данные в форму были введены корректно.
+        # РЎРѕР·РґР°С‘Рј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ, РµСЃР»Рё РґР°РЅРЅС‹Рµ РІ С„РѕСЂРјСѓ Р±С‹Р»Рё РІРІРµРґРµРЅС‹ РєРѕСЂСЂРµРєС‚РЅРѕ.
         form.save()
 
-        # Вызываем метод базового класса
+        # Р’С‹Р·С‹РІР°РµРј РјРµС‚РѕРґ Р±Р°Р·РѕРІРѕРіРѕ РєР»Р°СЃСЃР°
         return super(RegisterForm, self).form_valid(form)
 
-class Comment(models.Model):
-    post = models.ForeignKey('Post')
-    author = models.ForignKey('auth.User')
-    text = models.textField()
-    created_date = models.DateTimeField(default=timezone.now)
-    updated_date = models.DateTimeField(default=timezone.now)
-    
-class CommentForm(forms.Form):
-    author = forms.CharField(widget=forms.TextInput({'size': 50}), max_length=20)
-    author.label = "Автор"
-    text = forms.CharField(widget=forms.Textarea({'maxlength': 125, 'cols': '52', 'rows': '3'}))
-    text.label = "Комментарий"
-
-    
 class PostListForm(forms.Form):
     search = forms.CharField(required=False)
-    sort_field = forms.ChoiceField(choices=(('id', 'ID'), ('title', 'title'), ('-created_date', u'Дата создания')), required=False)
-    
-    
+    sort_field = forms.ChoiceField(choices=(('id', 'ID'), ('title', 'title'), ('-created_date', u'Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ')), required=False)
+
+
+class QuestionForm(forms.Form):
+    title = forms.CharField(max_length=255)
+    text = forms.CharField(widget=forms.Textarea)
+
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -50,3 +47,10 @@ class PostForm(forms.ModelForm):
             "title",
             "text"
         ]
+
+
+class CommentForm(forms.Form):
+    author = forms.CharField(widget=forms.TextInput({'size': 50}), max_length=20)
+    author.label = "РђРІС‚РѕСЂ"
+    text = forms.CharField(widget=forms.Textarea({'maxlength': 125, 'cols': '52', 'rows': '3'}))
+    text.label = "РљРѕРјРјРµРЅС‚Р°СЂРёР№"

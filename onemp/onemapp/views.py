@@ -1,11 +1,24 @@
 from django.shortcuts import get_object_or_404, render, redirect, resolve_url
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from .models import Post, Comment
 from .forms import PostListForm, PostForm, CommentForm, BootstrapAuthenticationForm
 
+
+def post_detail(request, post_id):
+    """ РџРѕСЃС‚ СЃ РєРѕРјРјРµРЅС‚Р°СЂРёСЏРјРё, РјРѕР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёР№"""
+    post = get_object_or_404(Post, pk=post_id)
+    comments = Comment.objects.filter(post=post)
+    form = CommentForm(request.POST)
+    form.is_valid()
+    if form.cleaned_data.get('author') and form.cleaned_data.get('text'):
+        author = form.cleaned_data.get('author')
+        text = form.cleaned_data.get('text')[:125]
+        title = text[:25]
+        comment = Comment.objects.create(title=title, post=post, author=author, text=text)
+    return render(request, 'post.html', {'post': post, 'comments': comments, 'form': form})
 
 
 @login_required
@@ -13,15 +26,15 @@ def user_post_list(request):
     user = get_user(request)
     return post_list(request, user)
 
-    
-def post_list(request):
-    """ Список всех постов с возможностью сортировки и поиска по title, можно добавить пост"""
-    if user and user.is_authenticated:
-        posts = Post.objects.filter(author=user)  # получить посты пользователя
-    else:
-        posts = Post.objects.all()  # получить все посты
 
-    form = PostListForm(request.GET)  # создать форму на основе модели Post
+def post_list(request, user=None):
+    """ РЎРїРёСЃРѕРє РІСЃРµС… РїРѕСЃС‚РѕРІ СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ СЃРѕСЂС‚РёСЂРѕРІРєРё Рё РїРѕРёСЃРєР° РїРѕ title, РјРѕР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ РїРѕСЃС‚"""
+    if user and user.is_authenticated:
+        posts = Post.objects.filter(author=user)  # РїРѕР»СѓС‡РёС‚СЊ РїРѕСЃС‚С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    else:
+        posts = Post.objects.all()  # РїРѕР»СѓС‡РёС‚СЊ РІСЃРµ РїРѕСЃС‚С‹
+
+    form = PostListForm(request.GET)  # СЃРѕР·РґР°С‚СЊ С„РѕСЂРјСѓ РЅР° РѕСЃРЅРѕРІРµ РјРѕРґРµР»Рё Post
     form.is_valid()
     if form.cleaned_data.get('search'):
         posts = posts.filter(title__icontains=form.cleaned_data['search'])
@@ -33,23 +46,9 @@ def post_list(request):
     return render(request, 'post_list.html', {'form': form, 'posts': posts})
 
 
-def post_detail(request, post_id):
-    """ Пост с комментариями, можно добавить комментарий"""
-    post = get_object_or_404(Post, pk=post_id)
-    comments = Comment.objects.filter(post=post)
-    form = CommentForm(request.POST)
-    form.is_valid()
-    if form.cleaned_data.get('author') and form.cleaned_data.get('text'):
-        author = form.cleaned_data.get('author')
-        text = form.cleaned_data.get('text')[:125]
-        title = text[:25]
-        comment = Comment.objects.create(title=title, post=post, author=author, text=text)
-    return render(request, 'post.html', {'post': post, 'comments': comments, 'form': form})
-    
-
 @login_required
 def post_create(request):
-    """ Добавление поста"""
+    """ Р”РѕР±Р°РІР»РµРЅРёРµ РїРѕСЃС‚Р°"""
     user = get_user(request)
     form = PostForm(request.POST)
     form.is_valid()
