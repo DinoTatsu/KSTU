@@ -4,7 +4,8 @@ from django.contrib.auth import get_user
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .models import Post, Comment
-from .forms import PostListForm, PostForm, CommentForm, BootstrapAuthenticationForm
+from .forms import PostListForm, PostForm, CommentForm, BootstrapAuthenticationForm, FileForm
+from django.core.files.storage import FileSystemStorage
 
 
 def post_detail(request, post_id):
@@ -46,15 +47,47 @@ def post_list(request, user=None):
     return render(request, 'post_list.html', {'form': form, 'posts': posts})
 
 
+def simple_upload(request):
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        return render(request, 'file_upload.html', {
+            'uploaded_file_url': uploaded_file_url
+        })
+    return render(request, 'file_upload.html')
+
+
 @login_required
 def post_create(request):
     """ Добавление поста"""
     user = get_user(request)
-    form = PostForm(request.POST)
+    form = PostForm(request.POST, request.FILES)
     form.is_valid()
     title = form.cleaned_data.get('title')
     text = form.cleaned_data.get('text')
     if title and text:
-        post = Post.objects.create(title=title, text=text, author=user)
+        if request.FILES['myfile']:
+            file = request.FILES.get("myfile") #["myfile"]
+            fs = FileSystemStorage()
+            filename = fs.save(file.name, file)
+            file_url = fs.url(filename)
+            post = Post.objects.create(title=title, text=text, author=user, file=file_url)
+        else:
+            post = Post.objects.create(title=title, text=text, author=user)
         return redirect(post_detail, post.pk)
     return render(request, 'post_form.html', {'form': form})
+
+
+def model_form_upload(request):
+    if request.method == 'POST':
+        form2 = FileForm(request.POST, request.FILES)
+        if form2.is_valid():
+            form2.save()
+            return redirect('post_list')
+    else:
+        form2 = FileForm()
+    return render(request, 'file_upload2.html', {
+        'form': form2
+    })

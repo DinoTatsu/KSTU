@@ -1,9 +1,13 @@
 from django import forms
-from .models import Post, Comment
+from .models import Post, Comment, PostFile
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.edit import FormView
 
+class FileForm(forms.ModelForm):
+    class Meta:
+        model = PostFile
+        fields = ('description', 'file', )
 
 class BootstrapAuthenticationForm(AuthenticationForm):
     """Authentication form which uses boostrap CSS."""
@@ -41,6 +45,7 @@ class QuestionForm(forms.Form):
 
 
 class PostForm(forms.ModelForm):
+    myfile = forms.FileField(required=False)
     class Meta:
         model = Post
         fields = [

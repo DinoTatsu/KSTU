@@ -4,7 +4,9 @@
     <div class="post">
         {{post.created_date}}<br/>
         <h2>{{post.title}}</h2><br/>
-        <p>{{post.text}}</p><br/>
+        <p>{{post.text}} <br>
+        </p><br/>
+        <img src="{{ post.file }}" alt="">  <br>
     </div>
 {#    {% include 'comments.html' %}#}
     <hr />
