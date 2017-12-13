@@ -67,9 +67,9 @@ def post_create(request):
     form.is_valid()
     title = form.cleaned_data.get('title')
     text = form.cleaned_data.get('text')
+    file = request.FILES.get("myfile")
     if title and text:
-        if request.FILES['myfile']:
-            file = request.FILES.get("myfile") #["myfile"]
+        if file:
             fs = FileSystemStorage()
             filename = fs.save(file.name, file)
             file_url = fs.url(filename)

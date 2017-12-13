@@ -6,7 +6,10 @@
         <h2>{{post.title}}</h2><br/>
         <p>{{post.text}} <br>
         </p><br/>
-        <img src="{{ post.file }}" alt="">  <br>
+        {% if post.file %}
+            <a href="{{ post.file }}">{{ post.file }}</a> <br>
+            <img src="{{ post.file }}" alt=""> <br>
+        {%  endif %}
     </div>
 {#    {% include 'comments.html' %}#}
     <hr />
